@@ -1,4 +1,6 @@
 
+
+
 //: This Swift IOS playground shows how to solve a linear equation with n unknowns and n equations using guassian elimination.
 
 //: Ax=b where A is a matrix with the coefficients of the linear equations, x and b are column vectors. x is the solution to the system of equations. The number of rows of x has to equal the number of columns of A from the rules of matrix multiplication.
@@ -18,7 +20,11 @@
 
 import UIKit
 
+
+//left this statement in to verify playground is running
 var str = "Hello, playground"
+
+//: ### struct column vector
 
 //This struct stores a column vector.
 
@@ -43,6 +49,8 @@ public struct Vector {
         }
     }
 }
+
+//: ### struct for matrix
 
 //This struct stores a matrix
 public struct Matrix {
@@ -71,10 +79,10 @@ public struct Matrix {
     }
 }
 
-
+//: ### gauss function for solving n equations in n unknowns
 
 //This is the gauss eliniation to solve a linear equation
-func gauss(a:Matrix)->[Double]{
+func gauss(a:Matrix)->Vector{
     //gauss elimination to solve linear equation. Use the augmented matrix!
     let rows=a.rows
     let columns=a.columns
@@ -87,8 +95,13 @@ func gauss(a:Matrix)->[Double]{
     var c: Double
     
     //x will be the solution in a Double array
-    var x: [Double]
-    x = Array(count: rows, repeatedValue: 0.0)
+    
+    var x=Vector(rows: rows)
+    x[0] = 0.0
+    x[1] = 0.0
+    x[2] = 0.0
+    
+    
     
         // loop for the generation of upper triangular matrix
     /*
@@ -144,8 +157,10 @@ func gauss(a:Matrix)->[Double]{
      }
      */
     var i :Int
-
+    //print("n=\(n)")
     for(i=n-1; i>=0; i -= 1){
+
+        //print("i=\(i)")
         sum=0.0
         
         for j in i+1..<rows{
@@ -161,7 +176,9 @@ func gauss(a:Matrix)->[Double]{
 
 }
 
-func mvmul (a: Matrix, b: Vector) -> [Double]{
+//: ### function mvmul matrix times vector multiplication
+
+func mvmul (a: Matrix, b: Vector) -> Vector{
     //This function multiplies an M-by-P matrix A by a M-by-1 column vector B and stores the results in an M-by-1 vector C.
     
     let rows=a.rows
@@ -175,7 +192,7 @@ func mvmul (a: Matrix, b: Vector) -> [Double]{
     a1 = [Double](count:rows*columns, repeatedValue:0.0)
     for i in 0..<columns{
         for j in 0..<rows{
-            print("\(count)")
+            //print("\(count)")
             a1[count]=a[i,j]
             count += 1
         }
@@ -186,13 +203,17 @@ func mvmul (a: Matrix, b: Vector) -> [Double]{
     
     count=0
     for i in 0..<rows1{
-        print("\(count)")
+        //print("\(count)")
         b1[count]=b[i]
         count += 1
     }
     print("\(b1)")
     
-    var result = [Double](count:rows1, repeatedValue:0.0)
+    var result=Vector(rows: rows)
+    result[0] = 0.0
+    result[1] = 0.0
+    result[2] = 0.0
+    
     
     for i in 0..<columns{
         for j in 0..<rows1{
@@ -203,30 +224,37 @@ func mvmul (a: Matrix, b: Vector) -> [Double]{
     return result
 }
 /********************************
-Now check the solution by using matrix multiplication to check the solution x
+Lets try to solve the first system of equations Ax=b
  ************************************/
 
-var m1=Matrix(rows: 3,columns: 4)
+//: Lets try to solve the first system of equations Ax=b
 
-m1[0, 0] = 10.0
-m1[0, 1] = -7.0
-m1[0, 2] = 3.0
-m1[0, 3] = 5.0
-m1[1, 0] = -6.0
-m1[1, 1] = 8.0
-m1[1, 2] = 4.0
-m1[1, 3] = 7.0
-m1[2, 0] = 2.0
-m1[2, 1] = 6.0
-m1[2, 2] = 9.0
-m1[2, 3] = -1.0
+//: ![first system of equtions to solve](guass1.gif)
 
-print("\(m1)")
+//: First put the system of equatons in augmented form
+
+//: ![first system of equtions to solve](guass2.gif)
+var m0=Matrix(rows: 3,columns: 4)
+
+m0[0, 0] = 9.0
+m0[0, 1] = 3.0
+m0[0, 2] = 4.0
+m0[0, 3] = 7.0
+m0[1, 0] = 4.0
+m0[1, 1] = 3.0
+m0[1, 2] = 4.0
+m0[1, 3] = 8.0
+m0[2, 0] = 1.0
+m0[2, 1] = 1.0
+m0[2, 2] = 1.0
+m0[2, 3] = 3.0
+
+print("Augmented matrix \(m0)")
 
 
-let solution=gauss(m1)
+let solution=gauss(m0)
 
-print("\(solution)")
+print("The solution to the first example is \(solution)")
 
 //check
 
@@ -234,28 +262,49 @@ print("\(solution)")
  Now check the solution by using matrix multiplication to check the solution x
  ************************************/
 
-var solution1=Vector(rows: 3)
 
-solution1[0] = -7.809086
-solution1[1] = -8.690904
-solution1[2] = 7.418178
+var m1=Matrix(rows: 3,columns: 3)
 
+m1[0, 0] = 9.0
+m1[0, 1] = 3.0
+m1[0, 2] = 4.0
+m1[1, 0] = 4.0
+m1[1, 1] = 3.0
+m1[1, 2] = 4.0
+m1[2, 0] = 1.0
+m1[2, 1] = 1.0
+m1[2, 2] = 1.0
 
-var m2=Matrix(rows: 3,columns: 3)
-
-m2[0, 0] = 10.0
-m2[0, 1] = -7.0
-m2[0, 2] = 3.0
-m2[1, 0] = -6.0
-m2[1, 1] = 8.0
-m2[1, 2] = 4.0
-m2[2, 0] = 2.0
-m2[2, 1] = 6.0
-m2[2, 2] = 9.0
+print("matrix A \(m1)")
 
 
+let checkB=mvmul(m1, b: solution)
 
-let checkB=mvmul(m2, b: solution1)
+print("This is the check for b \(checkB)")
 
-print("\(checkB)")
+//: ### solution checks for b
+var b=Vector(rows: 3)
+b[0] = 7.0
+b[1] = 8.0
+b[2] = 3.0
+
+func areVectorsEqual (a: Vector, b: Vector) -> Bool {
+    //This function returns true is 2 input vectors are equal
+    
+    assert(a.rows == b.rows, "Expected vectors of the same length, instead got arrays of two different lengths")
+    
+    var result = false
+    for index in 0..<a.rows {
+        if a[index]==b[index]{result=true}
+        else{result=false}
+    }
+    return result
+}
+
+if areVectorsEqual(b, b: checkB){
+    print("b and checkB vectors are equal\n gaussian elimination functions checks Ax=b")
+}
+
+
+
 
