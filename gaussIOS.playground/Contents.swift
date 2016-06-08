@@ -154,6 +154,7 @@ func gauss(a:Matrix)->Vector{
     var i=n
     //print("n=\(n)")
     //for(i=n-1; i>=0; i -= 1){
+    //eliminated c type for statement per Swift warning
     for _ in 0..<n{
         i -= 1
 
@@ -253,7 +254,12 @@ print("The solution to the first example is \(solution)")
 
 /********************************
  Now check the solution by using matrix multiplication to check the solution x
+ ie. Make sure matrix A times vector x solution equals b
  ************************************/
+
+
+//: Now check the solution by using matrix multiplication to check the solution x
+//: ie. Make sure matrix A times solution vector x equals column vector b
 
 
 var m1=Matrix(rows: 3,columns: 3)
@@ -299,6 +305,7 @@ func areVectorsEqual (a: Vector, b: Vector) -> Bool {
 if areVectorsEqual(b, b: checkB){
     print("b and checkB vectors are equal\n gaussian elimination functions checks Ax=b")
 }
+else{print("solution does not check/n b and checkB vectors are not equal")}
 
 
 
