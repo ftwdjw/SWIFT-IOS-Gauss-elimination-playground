@@ -97,11 +97,6 @@ func gauss(a:Matrix)->Vector{
     //x will be the solution in a Double array
     
     var x=Vector(rows: rows)
-    x[0] = 0.0
-    x[1] = 0.0
-    x[2] = 0.0
-    
-    
     
         // loop for the generation of upper triangular matrix
     /*
@@ -156,9 +151,11 @@ func gauss(a:Matrix)->Vector{
          x[i]=(A[i][n+1]-sum)/A[i][i];
      }
      */
-    var i :Int
+    var i=n
     //print("n=\(n)")
-    for(i=n-1; i>=0; i -= 1){
+    //for(i=n-1; i>=0; i -= 1){
+    for _ in 0..<n{
+        i -= 1
 
         //print("i=\(i)")
         sum=0.0
@@ -210,10 +207,6 @@ func mvmul (a: Matrix, b: Vector) -> Vector{
     print("\(b1)")
     
     var result=Vector(rows: rows)
-    result[0] = 0.0
-    result[1] = 0.0
-    result[2] = 0.0
-    
     
     for i in 0..<columns{
         for j in 0..<rows1{
@@ -296,7 +289,9 @@ func areVectorsEqual (a: Vector, b: Vector) -> Bool {
     var result = false
     for index in 0..<a.rows {
         if a[index]==b[index]{result=true}
-        else{result=false}
+        else{result=false
+            return result
+        }
     }
     return result
 }
