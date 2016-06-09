@@ -134,10 +134,14 @@ func gauss(a:Matrix)->Vector{
         }
     }
     
-    //print("\(A)")
+    //print("This is the upper triangular matrix\(A)")
+    
     n -= 1
+    //added assertion to make sure there is a solution for the system of equations
+    assert(A[n,n] != 0.0, "No solution for this system of equations!")
     x[n]=A[n,n+1]/A[n,n]
-     //print("x[\(n)]=\(x[n])")
+    
+    //print("x[\(n)]=\(x[n])")
 
     var sum=0.0
      /* this loop is for backward substitution in c
@@ -306,6 +310,23 @@ if areVectorsEqual(b, b: checkB){
     print("b and checkB vectors are equal\n gaussian elimination functions checks Ax=b")
 }
 else{print("solution does not check/n b and checkB vectors are not equal")}
+
+//: Now show an example with no solution
+
+var m2=Matrix(rows: 2,columns: 3)
+
+m2[0, 0] = 1.0
+m2[0, 1] = -1.0
+m2[0, 2] = 4.0
+m2[1, 0] = 2.0
+m2[1, 1] = -2.0
+m2[1, 2] = -4.0
+
+
+//let NoSolution=gauss(m2)
+
+//: Uncomment the code above to see an example of no solution
+
 
 
 
