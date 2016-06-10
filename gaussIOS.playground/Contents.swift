@@ -20,11 +20,7 @@
 
 import UIKit
 
-
-//left this statement in to verify playground is running
-var str = "Hello, playground"
-
-//: ### struct column vector
+//: ### This struct stores a column vector.
 
 //This struct stores a column vector.
 
@@ -50,7 +46,7 @@ public struct Vector {
     }
 }
 
-//: ### struct for matrix
+//: ### This struct stores a matrix.
 
 //This struct stores a matrix
 public struct Matrix {
@@ -79,22 +75,35 @@ public struct Matrix {
     }
 }
 
-//: ### gauss function for solving n equations in n unknowns
+//: ### gauss function for solving a system of equations n equations in n unknowns Ax=b
 
 //This is the gauss eliniation to solve a linear equation
-func gauss(a:Matrix)->Vector{
-    //gauss elimination to solve linear equation. Use the augmented matrix!
+func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
+        assert(a.rows == b.rows, "The number of rows of the matrix has to be equal to the number of rows of the b vector")
+    //gauss elimination to solve linear equation Ax=b. inputs:a is the A matrix. b is the b vector. outputs: x is the solution vector. isValid is a string to indicate if the result is valid. Some systems of equations have no solution.
     let rows=a.rows
     let columns=a.columns
     
     // matrix A will be the augmented matrix in upper triangular form
-    var A=Matrix(rows: rows, columns: columns)
-    A=a
+    var A=Matrix(rows: rows, columns: columns+1)
+    //print("\(A)")
+    
+    for i in 0..<rows{
+        for j in 0..<columns+1{
+            if j<columns{
+                 A[i,j]=a[i,j]
+            }
+            else{
+                A[i,j]=b[i]
+            }
+      
+        }}
+     //print("\(A)")
     
     var n=rows
     var c: Double
     
-    //x will be the solution in a Double array
+    //x will be the solution in a Vector
     
     var x=Vector(rows: rows)
     
@@ -138,7 +147,11 @@ func gauss(a:Matrix)->Vector{
     
     n -= 1
     //added assertion to make sure there is a solution for the system of equations
-    assert(A[n,n] != 0.0, "No solution for this system of equations!")
+    //assert(A[n,n] != 0.0, "No solution for this system of equations!")
+    
+    if A[n,n]==0 {
+        return (x: x, isValid: "There is a no valid solution")
+    }
     x[n]=A[n,n+1]/A[n,n]
     
     //print("x[\(n)]=\(x[n])")
@@ -174,7 +187,7 @@ func gauss(a:Matrix)->Vector{
          //print("x[\(n)]=\(x[n])")
         
     }
-    return x
+    return (x: x, isValid: "There is a valid solution")
 
 }
 
@@ -199,7 +212,7 @@ func mvmul (a: Matrix, b: Vector) -> Vector{
             count += 1
         }
     }
-    print("\(a1)")
+    //print("\(a1)")
     
     b1 = [Double](count:rows1, repeatedValue:0.0)
     
@@ -209,7 +222,7 @@ func mvmul (a: Matrix, b: Vector) -> Vector{
         b1[count]=b[i]
         count += 1
     }
-    print("\(b1)")
+    //print("\(b1)")
     
     var result=Vector(rows: rows)
     
@@ -232,27 +245,32 @@ Lets try to solve the first system of equations Ax=b
 //: First put the system of equatons in augmented form
 
 //: ![first system of equtions to solve](guass2.gif)
-var m0=Matrix(rows: 3,columns: 4)
+
+var m0=Matrix(rows: 3,columns: 3)
 
 m0[0, 0] = 9.0
 m0[0, 1] = 3.0
 m0[0, 2] = 4.0
-m0[0, 3] = 7.0
 m0[1, 0] = 4.0
 m0[1, 1] = 3.0
 m0[1, 2] = 4.0
-m0[1, 3] = 8.0
 m0[2, 0] = 1.0
 m0[2, 1] = 1.0
 m0[2, 2] = 1.0
-m0[2, 3] = 3.0
 
-print("Augmented matrix \(m0)")
+print("Matrix A \(m0)")
+
+var b=Vector(rows: 3)
+b[0] = 7.0
+b[1] = 8.0
+b[2] = 3.0
+
+print("Vector b \(b)")
 
 
-let solution=gauss(m0)
+let solution=gauss(m0, b: b).x
 
-print("The solution to the first example is \(solution)")
+print("\n\nThe solution to the first example is \(solution)")
 
 //check
 
@@ -266,30 +284,13 @@ print("The solution to the first example is \(solution)")
 //: ie. Make sure matrix A times solution vector x equals column vector b
 
 
-var m1=Matrix(rows: 3,columns: 3)
-
-m1[0, 0] = 9.0
-m1[0, 1] = 3.0
-m1[0, 2] = 4.0
-m1[1, 0] = 4.0
-m1[1, 1] = 3.0
-m1[1, 2] = 4.0
-m1[2, 0] = 1.0
-m1[2, 1] = 1.0
-m1[2, 2] = 1.0
-
-print("matrix A \(m1)")
 
 
-let checkB=mvmul(m1, b: solution)
+let checkB=mvmul(m0, b: solution)
 
-print("This is the check for b \(checkB)")
+print("\n\nThis is the check for b \(checkB)")
 
-//: ### solution checks for b
-var b=Vector(rows: 3)
-b[0] = 7.0
-b[1] = 8.0
-b[2] = 3.0
+
 
 func areVectorsEqual (a: Vector, b: Vector) -> Bool {
     //This function returns true is 2 input vectors are equal
@@ -312,20 +313,29 @@ if areVectorsEqual(b, b: checkB){
 else{print("solution does not check/n b and checkB vectors are not equal")}
 
 //: Now show an example with no solution
+print("\n\nNow show an example with no solution")
 
-var m2=Matrix(rows: 2,columns: 3)
+var m2=Matrix(rows: 2,columns: 2)
 
 m2[0, 0] = 1.0
 m2[0, 1] = -1.0
-m2[0, 2] = 4.0
 m2[1, 0] = 2.0
 m2[1, 1] = -2.0
-m2[1, 2] = -4.0
+
+print("Matrix A \(m2)")
+
+var b1=Vector(rows: 2)
+b1[0] = 4.0
+b1[1] = -4.0
+
+print("b Vector \(b1)")
 
 
-//let NoSolution=gauss(m2)
 
-//: Uncomment the code above to see an example of no solution
+let NoSolution=gauss(m2,b: b1).x
+let NoSolutionString=gauss(m2,b: b1).isValid
+
+print( NoSolutionString)
 
 
 
