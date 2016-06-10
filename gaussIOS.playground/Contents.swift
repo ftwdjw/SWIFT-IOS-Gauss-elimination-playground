@@ -88,6 +88,7 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
     var A=Matrix(rows: rows, columns: columns+1)
     //print("\(A)")
     
+    //fill in augmented matrix with matrix A and vector b in the last column
     for i in 0..<rows{
         for j in 0..<columns+1{
             if j<columns{
@@ -150,6 +151,7 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
     //assert(A[n,n] != 0.0, "No solution for this system of equations!")
     
     if A[n,n]==0 {
+        //print out x=0 and no valid solution if there is no solution
         return (x: x, isValid: "There is a no valid solution")
     }
     x[n]=A[n,n+1]/A[n,n]
