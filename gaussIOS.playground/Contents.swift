@@ -290,6 +290,19 @@ func printEquation (A:Matrix, b:Vector){
     
 }//end print func
 
+
+func printSolution(a:Vector){
+    let rows=a.rows
+    var solution=Vector(rows: rows)
+    solution=a
+    
+    print("The solution to the system of equations is:")
+    
+    for index in 0..<rows{
+        print("x[\(index)]=\(solution[index])")
+    }
+}
+
 /********************************
 Lets try to solve the first system of equations Ax=b
  ************************************/
@@ -328,7 +341,7 @@ printEquation(m0,b:b)
 
 let solution=gauss(m0, b: b).x
 
-print("\n\nThe solution to the first example is \(solution)")
+printSolution(solution)
 
 //check
 
