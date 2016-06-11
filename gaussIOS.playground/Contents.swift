@@ -246,7 +246,7 @@ func printEquation (A:Matrix, b:Vector){
     //rowToPrint.append(Array(count: rows, repeatedValue:0.0))
     print("\n")
     var count=0
-    print("Ax=b in row form\n")
+    print("Ax=b in row form (matrix equation)\n")
     for i in 0..<columns{
          print("[", terminator:"")
         for j in 0..<rows{
@@ -264,7 +264,7 @@ func printEquation (A:Matrix, b:Vector){
     
     count=0
     
-    print("Ax=b in column form\n")
+    print("Ax=b in column form (vector equation)\n")
     for i in 0..<columns{
         for j in 0..<rows{
             if i==0{
