@@ -317,7 +317,7 @@ Lets try to solve the first system of equations Ax=b
 //: ![first system of equtions to solve](guass2.gif)
 
 var m0=Matrix(rows: 3,columns: 3)
-
+//start matrix index at 0 instead of 1
 m0[0, 0] = 9.0
 m0[0, 1] = 3.0
 m0[0, 2] = 4.0
@@ -331,6 +331,7 @@ m0[2, 2] = 1.0
 print("Matrix A \(m0)")
 
 var b=Vector(rows: 3)
+//start vector index at 0 instead of 1
 b[0] = 7.0
 b[1] = 8.0
 b[2] = 3.0
