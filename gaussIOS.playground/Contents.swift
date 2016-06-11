@@ -250,14 +250,14 @@ func printEquation (A:Matrix, b:Vector){
     for i in 0..<columns{
          print("[", terminator:"")
         for j in 0..<rows{
-            print("A[\(i),\(j)])=\(A[i,j]) ", terminator:"")
+            print("A[\(i+1),\(j+1)])=\(A[i,j]) ", terminator:"")
         }
         print("]", terminator:"")
          print("[", terminator:"")
-        print(" x[\(count)] ", terminator:"")
+        print(" x[\(count+1)] ", terminator:"")
         print("]", terminator:"")
         count += 1
-        print(" = [b[\(i)]=\(b[i]) ", terminator:"")
+        print(" = [b[\(i+1)]=\(b[i]) ", terminator:"")
         print("]", terminator:"")
         print("\n")
     }
@@ -269,20 +269,20 @@ func printEquation (A:Matrix, b:Vector){
         for j in 0..<rows{
             if i==0{
                 if count==0{
-                    print("x[\(count)] [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")}
+                    print("x[\(count+1)] [A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")}
                 else{
-                    print("+x[\(count)][A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
+                    print("+x[\(count+1)][A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")
                 }
                 
                 
                 
                 }
             else{
-                print("     [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
+                print("     [A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")
             }
             
             count += 1
-            if count==columns{print("= [b[\(i)]=\(b[i])] ", terminator:"")}
+            if count==columns{print("= [b[\(i+1)]=\(b[i])] ", terminator:"")}
         }
         print("\n")
         count=0
@@ -300,7 +300,7 @@ func printSolution(a:Vector){
     print("The solution to the system of equations is:")
     
     for index in 0..<rows{
-        print("x[\(index)]=\(solution[index])")
+        print("x[\(index+1)]=\(solution[index])")
     }
 }
 
