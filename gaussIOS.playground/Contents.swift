@@ -268,7 +268,15 @@ func printEquation (A:Matrix, b:Vector){
     for i in 0..<columns{
         for j in 0..<rows{
             if i==0{
-                print("x[\(count)] [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")}
+                if count==0{
+                    print("x[\(count)] [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")}
+                else{
+                    print("+x[\(count)][A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
+                }
+                
+                
+                
+                }
             else{
                 print("     [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
             }
