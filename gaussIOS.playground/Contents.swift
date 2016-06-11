@@ -240,6 +240,8 @@ func mvmul (a: Matrix, b: Vector) -> Vector{
 //: ### function printEquation to print Ax=b is row and column form
 
 func printEquation (A:Matrix, b:Vector){
+    //to provide a printout similar to algebra texts start index at 1 instead of 0
+    //for printout
     let columns=A.columns
     let rows=A.rows
     //var rowToPrint=[Double]()
@@ -293,6 +295,8 @@ func printEquation (A:Matrix, b:Vector){
 //: ### function printSolution
 
 func printSolution(a:Vector){
+    //to provide a printout similar to algebra texts start index at 1 instead of 0
+    //for printout
     let rows=a.rows
     var solution=Vector(rows: rows)
     solution=a
