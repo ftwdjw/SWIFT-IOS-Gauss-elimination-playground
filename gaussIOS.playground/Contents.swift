@@ -236,6 +236,47 @@ func mvmul (a: Matrix, b: Vector) -> Vector{
     
     return result
 }
+
+//: ### function printEquation to print Ax=b is row and column form
+
+func printEquation (A:Matrix, b:Vector){
+    let columns=A.columns
+    let rows=A.rows
+    //var rowToPrint=[Double]()
+    //rowToPrint.append(Array(count: rows, repeatedValue:0.0))
+    print("\n")
+    var count=0
+    print("Ax=b in row form\n")
+    for i in 0..<columns{
+         print("[", terminator:"")
+        for j in 0..<rows{
+            print("A[\(i),\(j)])=\(A[i,j]) ", terminator:"")
+        }
+        print("]", terminator:"")
+         print("[", terminator:"")
+        print(" x[\(count)] ", terminator:"")
+        print("]", terminator:"")
+        count += 1
+        print(" = [b[\(i)]=\(b[i]) ", terminator:"")
+        print("]", terminator:"")
+        print("\n")
+    }
+    
+    count=0
+    
+    print("Ax=b in column form\n")
+    for i in 0..<columns{
+        for j in 0..<rows{
+            print("x[\(count)] A[\(i),\(j)])=\(A[i,j])  ", terminator:"")
+            count += 1
+            if count==columns{print("= b[\(i)]=\(b[i]) ", terminator:"")}
+        }
+        print("\n")
+        count=0
+    }
+    
+}//end print func
+
 /********************************
 Lets try to solve the first system of equations Ax=b
  ************************************/
@@ -268,6 +309,8 @@ b[1] = 8.0
 b[2] = 3.0
 
 print("Vector b \(b)")
+
+printEquation(m0,b:b)
 
 
 let solution=gauss(m0, b: b).x
@@ -332,7 +375,7 @@ b1[1] = -4.0
 
 print("b Vector \(b1)")
 
-
+printEquation(m2,b:b1)
 
 let NoSolution=gauss(m2,b: b1).x
 let NoSolutionString=gauss(m2,b: b1).isValid
