@@ -290,6 +290,7 @@ func printEquation (A:Matrix, b:Vector){
     
 }//end print func
 
+//: ### function printSolution
 
 func printSolution(a:Vector){
     let rows=a.rows
