@@ -32,20 +32,19 @@ public struct Vector {
         grid = Array(count: rows, repeatedValue: 0.0)
     }
     func indexIsValid(row: Int) -> Bool {
-        return row >= 1 && row <= rows
+        return row >= 0 && row < rows
     }
     subscript(row: Int) -> Double {
         get {
             assert(indexIsValid(row), "Index out of range")
-            return grid[row-1]
+            return grid[row]
         }
         set {
             assert(indexIsValid(row), "Index out of range")
-            grid[row-1] = newValue
+            grid[row] = newValue
         }
     }
 }
-
 
 //: ### This struct stores a matrix.
 
@@ -61,17 +60,17 @@ public struct Matrix {
     }
     
     func indexIsValidForRow(row: Int, column: Int) -> Bool {
-        return row >= 1 && row <= rows && column >= 1 && column <= columns
+        return row >= 0 && row < rows && column >= 0 && column < columns
     }
     
     subscript(row: Int, column: Int) -> Double {
         get {
-            assert(indexIsValidForRow(row,column: column), "get Index out of range")
-            return grid[((row-1) * columns) + column - 1]
+            assert(indexIsValidForRow(row,column: column), "Index out of range")
+            return grid[(row * columns) + column]
         }
         set {
-            assert(indexIsValidForRow(row, column: column), "set Index out of range")
-            grid[((row-1) * columns) + column - 1] = newValue
+            assert(indexIsValidForRow(row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
         }
     }
 }
@@ -90,9 +89,9 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
     //print("\(A)")
     
     //fill in augmented matrix with matrix A and vector b in the last column
-    for i in 1...rows{
-        for j in 1...columns+1{
-            if j<=columns{
+    for i in 0..<rows{
+        for j in 0..<columns+1{
+            if j<columns{
                  A[i,j]=a[i,j]
             }
             else{
@@ -102,7 +101,7 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
         }}
      //print("\(A)")
     
-    let n=rows
+    var n=rows
     var c: Double
     
     //x will be the solution in a Vector
@@ -132,11 +131,11 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
      */
     // loop for the generation of upper triangular matrix
     //print("\(A)")
-    for j in 1...n{
-        for i in 1...n{
+    for j in 0..<n{
+        for i in 0..<n{
             if i>j{
             c=A[i,j]/A[j,j]
-                for k in 1...n+1{
+                for k in 0..<n+1{
                     A[i,k] -= c*A[j,k]
                     //uncomment this for trouble shooting
                     //print("A[\(i),\(k)]=\(A[i,k])")
@@ -146,9 +145,8 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
     }
     
     //print("This is the upper triangular matrix\(A)")
-    //all good to here
     
-
+    n -= 1
     //added assertion to make sure there is a solution for the system of equations
     //assert(A[n,n] != 0.0, "No solution for this system of equations!")
     
@@ -172,25 +170,23 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
          x[i]=(A[i][n+1]-sum)/A[i][i];
      }
      */
-    var i=n-1
+    var i=n
     //print("n=\(n)")
     //for(i=n-1; i>=0; i -= 1){
     //eliminated c type for statement per Swift warning
-    while i>=1{
-      
+    for _ in 0..<n{
+        i -= 1
 
         //print("i=\(i)")
         sum=0.0
         
-        for j in i+1...n{
+        for j in i+1..<rows{
             sum += A[i,j]*x[j]
             //print("sum[\(j)]=\(sum)")
             
         }
         x[i]=(A[i,n+1]-sum)/A[i,i]
-         //print("x[\(i)]=\(x[i])")
-        
-          i -= 1
+         //print("x[\(n)]=\(x[n])")
         
     }
     return (x: x, isValid: "There is a valid solution")
@@ -201,16 +197,39 @@ func gauss(a:Matrix, b:Vector)->(x: Vector,isValid: String){
 
 func mvmul (a: Matrix, b: Vector) -> Vector{
     //This function multiplies an M-by-P matrix A by a M-by-1 column vector B and stores the results in an M-by-1 vector C.
-    assert(a.rows == b.rows, "The number of rows of the matrix has to be equal to the number of rows of the b vector")
     
     let rows=a.rows
     let columns=a.columns
+    let rows1=b.rows
     
+    var a1=[Double]()
+    var b1=[Double]()
+    var count=0
+    
+    a1 = [Double](count:rows*columns, repeatedValue:0.0)
+    for i in 0..<columns{
+        for j in 0..<rows{
+            //print("\(count)")
+            a1[count]=a[i,j]
+            count += 1
+        }
+    }
+    //print("\(a1)")
+    
+    b1 = [Double](count:rows1, repeatedValue:0.0)
+    
+    count=0
+    for i in 0..<rows1{
+        //print("\(count)")
+        b1[count]=b[i]
+        count += 1
+    }
+    //print("\(b1)")
     
     var result=Vector(rows: rows)
     
-    for i in 1...columns{
-        for j in 1...rows{
+    for i in 0..<columns{
+        for j in 0..<rows1{
             result[i] += a[i,j]*b[j]
         }
     }
@@ -228,47 +247,47 @@ func printEquation (A:Matrix, b:Vector){
     //var rowToPrint=[Double]()
     //rowToPrint.append(Array(count: rows, repeatedValue:0.0))
     print("\n")
-    var count=1
+    var count=0
     print("Ax=b in row form (matrix equation)\n")
-    for i in 1...columns{
+    for i in 0..<columns{
          print("[", terminator:"")
-        for j in 1...rows{
-            print("A[\(i),\(j)])=\(A[i,j]) ", terminator:"")
+        for j in 0..<rows{
+            print("A[\(i+1),\(j+1)])=\(A[i,j]) ", terminator:"")
         }
         print("]", terminator:"")
          print("[", terminator:"")
-        print(" x[\(count)] ", terminator:"")
+        print(" x[\(count+1)] ", terminator:"")
         print("]", terminator:"")
         count += 1
-        print(" = [b[\(i)]=\(b[i]) ", terminator:"")
+        print(" = [b[\(i+1)]=\(b[i]) ", terminator:"")
         print("]", terminator:"")
         print("\n")
     }
     
-    count=1
+    count=0
     
     print("Ax=b in column form (vector equation)\n")
-    for i in 1...columns{
-        for j in 1...rows{
-            if i==1{
-                if count==1{
-                    print("x[\(count)] [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")}
+    for i in 0..<columns{
+        for j in 0..<rows{
+            if i==0{
+                if count==0{
+                    print("x[\(count+1)] [A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")}
                 else{
-                    print("+x[\(count)][A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
+                    print("+x[\(count+1)][A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")
                 }
                 
                 
                 
                 }
             else{
-                print("     [A[\(i),\(j)])=\(A[i,j])]  ", terminator:"")
+                print("     [A[\(i+1),\(j+1)])=\(A[i,j])]  ", terminator:"")
             }
             
             count += 1
-            if count==columns+1 {print("= [b[\(i)]=\(b[i])] ", terminator:"")}
+            if count==columns{print("= [b[\(i+1)]=\(b[i])] ", terminator:"")}
         }
         print("\n")
-        count=1
+        count=0
     }
     
 }//end print func
@@ -284,8 +303,8 @@ func printSolution(a:Vector){
     
     print("The solution to the system of equations is:")
     
-    for index in 1...rows{
-        print("x[\(index)]=\(solution[index])")
+    for index in 0..<rows{
+        print("x[\(index+1)]=\(solution[index])")
     }
 }
 
@@ -303,23 +322,23 @@ Lets try to solve the first system of equations Ax=b
 
 var m0=Matrix(rows: 3,columns: 3)
 //start matrix index at 0 instead of 1
-m0[1, 1] = 9.0
-m0[1, 2] = 3.0
-m0[1, 3] = 4.0
-m0[2, 1] = 4.0
-m0[2, 2] = 3.0
-m0[2, 3] = 4.0
-m0[3, 1] = 1.0
-m0[3, 2] = 1.0
-m0[3, 3] = 1.0
+m0[0, 0] = 9.0
+m0[0, 1] = 3.0
+m0[0, 2] = 4.0
+m0[1, 0] = 4.0
+m0[1, 1] = 3.0
+m0[1, 2] = 4.0
+m0[2, 0] = 1.0
+m0[2, 1] = 1.0
+m0[2, 2] = 1.0
 
 print("Matrix A \(m0)")
 
 var b=Vector(rows: 3)
 //start vector index at 0 instead of 1
-b[1] = 7.0
-b[2] = 8.0
-b[3] = 3.0
+b[0] = 7.0
+b[1] = 8.0
+b[2] = 3.0
 
 print("Vector b \(b)")
 
@@ -356,7 +375,7 @@ func areVectorsEqual (a: Vector, b: Vector) -> Bool {
     assert(a.rows == b.rows, "Expected vectors of the same length, instead got arrays of two different lengths")
     
     var result = false
-    for index in 1...a.rows {
+    for index in 0..<a.rows {
         if a[index]==b[index]{result=true}
         else{result=false
             return result
@@ -375,16 +394,16 @@ print("\n\nNow show an example with no solution")
 
 var m2=Matrix(rows: 2,columns: 2)
 
-m2[1, 1] = 1.0
-m2[1, 2] = -1.0
-m2[2, 1] = 2.0
-m2[2, 2] = -2.0
+m2[0, 0] = 1.0
+m2[0, 1] = -1.0
+m2[1, 0] = 2.0
+m2[1, 1] = -2.0
 
 print("Matrix A \(m2)")
 
 var b1=Vector(rows: 2)
-b1[1] = 4.0
-b1[2] = -4.0
+b1[0] = 4.0
+b1[1] = -4.0
 
 print("b Vector \(b1)")
 
