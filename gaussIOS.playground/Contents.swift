@@ -3,6 +3,8 @@
 
 //: This Swift IOS playground shows how to solve a linear equation with n unknowns and n equations using guassian elimination.
 
+// fixed for xcode 8
+
 //: Ax=b where A is a matrix with the coefficients of the linear equations, x and b are column vectors. x is the solution to the system of equations. The number of rows of x has to equal the number of columns of A from the rules of matrix multiplication.
 
 //: ![System of equations](NumberedEquation2.gif)
@@ -29,18 +31,18 @@ public struct Vector {
     var grid=[Double]()
     init(rows: Int) {
         self.rows = rows
-        grid = Array(count: rows, repeatedValue: 0.0)
+        grid = Array(repeating: 0.0, count: rows)
     }
     func indexIsValid(row: Int) -> Bool {
         return row >= 1 && row <= rows
     }
     subscript(row: Int) -> Double {
         get {
-            assert(indexIsValid(row), "Index out of range")
+            assert(indexIsValid(row: row), "Index out of range")
             return grid[row-1]
         }
         set {
-            assert(indexIsValid(row), "Index out of range")
+            assert(indexIsValid(row: row), "Index out of range")
             grid[row-1] = newValue
         }
     }
@@ -57,7 +59,7 @@ public struct Matrix {
     init(rows: Int, columns: Int) {
         self.rows = rows
         self.columns = columns
-        grid = Array(count: rows * columns, repeatedValue: 0.0)
+        grid = Array(repeating: 0.0, count: rows * columns)
     }
     
     func indexIsValidForRow(row: Int, column: Int) -> Bool {
@@ -66,11 +68,11 @@ public struct Matrix {
     
     subscript(row: Int, column: Int) -> Double {
         get {
-            assert(indexIsValidForRow(row,column: column), "get Index out of range")
+            assert(indexIsValidForRow(row: row,column: column), "get Index out of range")
             return grid[((row-1) * columns) + column - 1]
         }
         set {
-            assert(indexIsValidForRow(row, column: column), "set Index out of range")
+            assert(indexIsValidForRow(row: row, column: column), "set Index out of range")
             grid[((row-1) * columns) + column - 1] = newValue
         }
     }
@@ -323,12 +325,12 @@ b[3] = 3.0
 
 print("Vector b \(b)")
 
-printEquation(m0,b:b)
+printEquation(A: m0,b:b)
 
 
-let solution=gauss(m0, b: b).x
+let solution=gauss(a: m0, b: b).x
 
-printSolution(solution)
+printSolution(a: solution)
 
 //check
 
@@ -344,7 +346,7 @@ printSolution(solution)
 
 
 
-let checkB=mvmul(m0, b: solution)
+let checkB=mvmul(a: m0, b: solution)
 
 print("\n\nThis is the check for b \(checkB)")
 
@@ -365,7 +367,7 @@ func areVectorsEqual (a: Vector, b: Vector) -> Bool {
     return result
 }
 
-if areVectorsEqual(b, b: checkB){
+if areVectorsEqual(a: b, b: checkB){
     print("b and checkB vectors are equal\n gaussian elimination functions checks Ax=b")
 }
 else{print("solution does not check/n b and checkB vectors are not equal")}
@@ -388,10 +390,10 @@ b1[2] = -4.0
 
 print("b Vector \(b1)")
 
-printEquation(m2,b:b1)
+printEquation(A: m2,b:b1)
 
-let NoSolution=gauss(m2,b: b1).x
-let NoSolutionString=gauss(m2,b: b1).isValid
+let NoSolution=gauss(a: m2,b: b1).x
+let NoSolutionString=gauss(a: m2,b: b1).isValid
 
 print( NoSolutionString)
 
